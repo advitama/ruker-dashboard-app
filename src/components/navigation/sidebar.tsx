@@ -1,15 +1,23 @@
+// import hooks from react
 import { createElement } from "react";
 
+// import utils
 import { cn } from "@/utils";
 
+// import components from next
 import Link from "next/link";
 import Image from "next/image";
 
+// import icons
 import { Settings } from "lucide-react";
 import RukerSmallIcon from "@/assets/icons/ruker-small.png";
 
+// import types
 import type { Navigation } from "@/types/navigation";
 
+/*
+  * Sidebar component
+ */
 export function Sidebar({ navigation }: { navigation: Navigation[] }) {
   return (
     <aside className="fixed inset-y-0 left-0 z-40 hidden w-14 group transition ease-in-out hover:w-56 flex-col border-r bg-background sm:flex">

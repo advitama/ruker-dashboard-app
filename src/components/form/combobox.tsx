@@ -1,9 +1,12 @@
 "use client";
 
+// import hooks from react
 import { useState } from "react";
-import { CaretSortIcon, CheckIcon } from "@radix-ui/react-icons";
 
+// import utils
 import { cn } from "@/utils";
+
+// import ui components from shadcn/ui
 import { Button } from "@/components/ui/button";
 import {
   Command,
@@ -18,6 +21,9 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+
+// import icons
+import { CaretSortIcon, CheckIcon } from "@radix-ui/react-icons";
 
 const workspaces = [
   {

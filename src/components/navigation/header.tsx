@@ -1,10 +1,14 @@
+// import hooks from react
 import { createElement } from "react";
 
+// import utils
 import { cn } from "@/utils";
 
+// import components from next
 import Link from "next/link";
 import Image from "next/image";
 
+// import ui components from shadcn/ui
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -17,14 +21,20 @@ import {
 import { Input } from "@/components/ui/input";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 
+// import components
 import { ModeToggle } from "@/components/util/mode-toggle";
 import { Combobox } from "@/components/form/combobox";
 
+// import types
 import type { Navigation } from "@/types/navigation";
 
+// import icons
 import { Search, PanelLeft } from "lucide-react";
 import RukerSmallIcon from "@/assets/icons/ruker-small.png";
 
+/*
+  * Header component
+*/ 
 export function Header({ navigation }: { navigation: Navigation[] }) {
   return (
     <>
