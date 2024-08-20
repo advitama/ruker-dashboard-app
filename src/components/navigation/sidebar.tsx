@@ -12,7 +12,7 @@ import type { Navigation } from "@/types/navigation";
 
 export function Sidebar({ navigation }: { navigation: Navigation[] }) {
   return (
-    <aside className="fixed inset-y-0 left-0 z-10 hidden w-14 group transition ease-in-out hover:w-56 flex-col border-r bg-background sm:flex">
+    <aside className="fixed inset-y-0 left-0 z-40 hidden w-14 group transition ease-in-out hover:w-56 flex-col border-r bg-background sm:flex">
       <nav className="flex flex-col items-center group-hover:items-start group-hover:ml-1 gap-4 px-2 sm:py-5">
         <Link
           href="#"
