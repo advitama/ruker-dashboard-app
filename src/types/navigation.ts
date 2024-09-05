@@ -5,5 +5,6 @@ export type Navigation = {
   name: string;
   href: string;
   current?: boolean;
-  icon: ForwardRefExoticComponent<LucideProps>;
+  hidden?: boolean;
+  icon?: ForwardRefExoticComponent<LucideProps>;
 };

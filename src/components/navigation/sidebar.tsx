@@ -16,7 +16,7 @@ import RukerSmallIcon from "@/assets/icons/ruker-small.png";
 import type { Navigation } from "@/types/navigation";
 
 /*
-  * Sidebar component
+ * Sidebar component
  */
 export function Sidebar({ navigation }: { navigation: Navigation[] }) {
   return (
@@ -35,25 +35,27 @@ export function Sidebar({ navigation }: { navigation: Navigation[] }) {
           />
           <span className="sr-only">Ruker</span>
         </Link>
-        {navigation.map((item, index) => (
-          <Link
-            key={index}
-            href={item.href}
-            className={cn(
-              "flex h-9 w-9 items-center justify-center rounded-lg transition-colors hover:text-foreground md:h-8 md:w-full  group-hover:justify-start group-hover:pl-2.5 group-hover:-ml-1",
-              {
-                "bg-accent text-accent-foreground": item.current,
-                "text-muted-foreground": !item.current,
-              }
-            )}
-          >
-            {createElement(item.icon, { className: "h-5 w-5" })}
-            <span className="sr-only">{item.name}</span>{" "}
-            <div className="hidden ml-3 transition duration-300 text-sm group-hover:flex">
-              {item.name}
-            </div>
-          </Link>
-        ))}
+        {navigation.map((item, index) =>
+          item.hidden ? null : (
+            <Link
+              key={index}
+              href={item.href}
+              className={cn(
+                "flex h-9 w-9 items-center justify-center rounded-lg transition-colors hover:text-foreground md:h-8 md:w-full  group-hover:justify-start group-hover:pl-2.5 group-hover:-ml-1",
+                {
+                  "bg-accent text-accent-foreground": item.current,
+                  "text-muted-foreground": !item.current,
+                }
+              )}
+            >
+              {item.icon && createElement(item.icon, { className: "h-5 w-5" })}
+              <span className="sr-only">{item.name}</span>{" "}
+              <div className="hidden ml-3 transition duration-300 text-sm group-hover:flex">
+                {item.name}
+              </div>
+            </Link>
+          )
+        )}
       </nav>
       <nav className="mt-auto flex flex-col items-center gap-4 px-2 sm:py-5">
         <Link

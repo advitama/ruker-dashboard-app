@@ -70,20 +70,23 @@ export function Header({
           <SheetContent side="left" className="sm:max-w-xs">
             <nav className="grid gap-6 text-lg font-medium">
               <ModeToggle />
-              {navigation.map((item, index) => (
-                <Link
-                  key={index}
-                  href={item.href}
-                  className={cn("flex items-center gap-4 px-2.5", {
-                    "text-muted-foreground hover:text-foreground":
-                      !item.current,
-                    "text-foreground": item.current,
-                  })}
-                >
-                  {createElement(item.icon, { className: "h-5 w-5" })}
-                  {item.name}
-                </Link>
-              ))}
+              {navigation.map((item, index) =>
+                item.hidden ? null : (
+                  <Link
+                    key={index}
+                    href={item.href}
+                    className={cn("flex items-center gap-4 px-2.5", {
+                      "text-muted-foreground hover:text-foreground":
+                        !item.current,
+                      "text-foreground": item.current,
+                    })}
+                  >
+                    {item.icon &&
+                      createElement(item.icon, { className: "h-5 w-5" })}
+                    {item.name}
+                  </Link>
+                )
+              )}
             </nav>
           </SheetContent>
         </Sheet>
