@@ -33,7 +33,7 @@ export default function DashboardLayout({
     <div className="flex min-h-screen w-full flex-col bg-muted/40">
       <Sidebar navigation={navigation} />
       <div className="flex flex-col sm:py-3 sm:pl-14">
-        <Header navigation={navigation} />
+        <Header pathname={pathname} navigation={navigation} />
         <main className="py-2">{children}</main>
       </div>
       <Toaster />
