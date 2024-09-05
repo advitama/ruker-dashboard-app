@@ -28,13 +28,16 @@ import { Combobox } from "@/components/form/combobox";
 // import types
 import type { Navigation } from "@/types/navigation";
 
+// import logout function
+import { logout } from "@/utils/function/logout";
+
 // import icons
 import { Search, PanelLeft } from "lucide-react";
 import RukerSmallIcon from "@/assets/icons/ruker-small.png";
 
 /*
-  * Header component
-*/ 
+ * Header component
+ */
 export function Header({ navigation }: { navigation: Navigation[] }) {
   return (
     <>
@@ -102,7 +105,15 @@ export function Header({ navigation }: { navigation: Navigation[] }) {
             <DropdownMenuItem>Settings</DropdownMenuItem>
             <DropdownMenuItem>Support</DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>Logout</DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() => {
+                logout().then(() => {
+                  window.location.reload();
+                });
+              }}
+            >
+              Logout
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </header>
