@@ -1,48 +1,40 @@
 import { env } from "./config/env";
-import { AUTH_API } from "./lib/axios";
+import { AUTH_API } from "./lib/api/auth";
 import { NextRequest, NextResponse } from "next/server";
 
 export default async function middleware(req: NextRequest) {
-  const path = req.nextUrl.pathname;
-  const access_token = req.cookies.get("access_token")?.value;
+  const { pathname } = req.nextUrl;
+  const accessToken = req.cookies.get("access_token")?.value;
 
-  if (path && access_token) {
-    AUTH_API.defaults.headers.Authorization = `Bearer ${access_token}`;
-
-    try {
-      const response = await AUTH_API.get("/profile");
-      if (response.data.verified) {
-        return NextResponse.next();
-      } else {
-        // Redirect to the verify email page if the user is not verified
-        return NextResponse.redirect(
-          new URL(`${env.NEXT_PUBLIC_AUTH_APP_URL}/verify-email`, req.nextUrl)
-        );
-      }
-    } catch (error) {
-      const status = (error as any).response?.status;
-      if (status === 401) {
-        // Redirect to the login page if the user is unauthorized
-        return NextResponse.redirect(
-          new URL(`${env.NEXT_PUBLIC_AUTH_APP_URL}/login`, req.nextUrl)
-        );
-      } else {
-        // Handle other errors (e.g., network errors, 500 server errors) by redirecting to a generic error page
-        return NextResponse.redirect(
-          new URL(`${env.NEXT_PUBLIC_AUTH_APP_URL}/error`, req.nextUrl)
-        );
-      }
-    }
-  } else {
-    // Redirect to the login page if the user is not authenticated
-    return NextResponse.redirect(
-      new URL(`${env.NEXT_PUBLIC_AUTH_APP_URL}/login`, req.nextUrl)
-    );
+  if (!accessToken) {
+    // Redirect to the login page if no access token is found
+    return redirectToLogin(req);
   }
 
-  // If no path or access token, proceed with the request
-  return NextResponse.next();
+  AUTH_API.defaults.headers.Authorization = `Bearer ${accessToken}`;
+
+  try {
+    const { data } = await AUTH_API.get("/profile");
+
+    // Proceed if the user is verified, otherwise redirect to the email verification page
+    return data.verified ? NextResponse.next() : redirectToVerifyEmail(req);
+  } catch (error) {
+    const status = (error as any)?.response?.status;
+
+    // Redirect to login page if unauthorized, else handle other errors
+    return status === 401 ? redirectToLogin(req) : redirectToLogin(req); // Optionally, handle other error cases differently
+  }
 }
+
+const redirectToLogin = (req: NextRequest) =>
+  NextResponse.redirect(
+    new URL(`${env.NEXT_PUBLIC_AUTH_APP_URL}/login`, req.nextUrl)
+  );
+
+const redirectToVerifyEmail = (req: NextRequest) =>
+  NextResponse.redirect(
+    new URL(`${env.NEXT_PUBLIC_AUTH_APP_URL}/verify-email`, req.nextUrl)
+  );
 
 export const config = {
   matcher: ["/((?!api|_next/static|_next/image|.*\\.png$).*)"],

@@ -13,13 +13,19 @@ import { Sidebar } from "@/components/navigation/sidebar";
 // import types
 import type { Navigation } from "@/types/navigation";
 
+// Import React query components
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+
 // import icons
 import { Home } from "lucide-react";
 
 const navigation: Navigation[] = [
-  { name: "Home", href: "/", icon: Home },
+  { name: "Overview", href: "/", icon: Home },
   { name: "New workspace", href: "/new-workspace", icon: Home, hidden: true },
 ];
+
+const queryClient = new QueryClient();
 
 export default function DashboardLayout({
   children,
@@ -33,13 +39,15 @@ export default function DashboardLayout({
   });
 
   return (
-    <div className="flex min-h-screen w-full flex-col bg-muted/40">
-      <Sidebar navigation={navigation} />
-      <div className="flex flex-col sm:py-3 sm:pl-14">
-        <Header pathname={pathname} navigation={navigation} />
-        <main className="py-2 px-8">{children}</main>
+    <QueryClientProvider client={queryClient}>
+      <div className="flex min-h-screen w-full flex-col bg-muted/40">
+        <Sidebar navigation={navigation} />
+        <div className="flex flex-col sm:py-3 sm:pl-14">
+          <Header pathname={pathname} navigation={navigation} />
+          <main className="py-2 px-8">{children}</main>
+        </div>
+        <Toaster />
       </div>
-      <Toaster />
-    </div>
+    </QueryClientProvider>
   );
 }

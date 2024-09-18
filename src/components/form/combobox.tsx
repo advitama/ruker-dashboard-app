@@ -70,7 +70,7 @@ export function Combobox() {
           className="w-full sm:w-[250px] justify-between"
         >
           {value
-            ? workspaces.find((workspace) => workspace.value === value)?.label
+            ? workspaces.find((workspace) => workspace.label === value)?.label
             : "Select workspace..."}
           <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
@@ -84,7 +84,7 @@ export function Combobox() {
               {workspaces.map((workspace) => (
                 <CommandItem
                   key={workspace.value}
-                  value={workspace.value}
+                  value={workspace.label}
                   onSelect={(currentValue: React.SetStateAction<string>) => {
                     setValue(currentValue === value ? "" : currentValue);
                     setOpen(false);
@@ -93,14 +93,14 @@ export function Combobox() {
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     src={workspace.image}
-                    alt={workspace.label}
+                    alt={`${workspace.label} logo`}
                     className="w-6 h-6 rounded-md mr-2"
                   />
                   {workspace.label}
                   <CheckIcon
                     className={cn(
                       "ml-auto h-4 w-4",
-                      value === workspace.value ? "opacity-100" : "opacity-0"
+                      value === workspace.label ? "opacity-100" : "opacity-0"
                     )}
                   />
                 </CommandItem>
