@@ -102,9 +102,7 @@ export function UserDataTable<TData, TValue>() {
             <DialogContent className="sm:max-w-[425px]">
               <DialogHeader>
                 <DialogTitle>Invite new user</DialogTitle>
-                <DialogDescription>
-                 {/* Description */}
-                </DialogDescription>
+                <DialogDescription>{/* Description */}</DialogDescription>
               </DialogHeader>
               <div className="grid gap-4 py-4">{/* User form */}</div>
               <DialogFooter></DialogFooter>
@@ -122,9 +120,7 @@ export function UserDataTable<TData, TValue>() {
             <SheetContent style={{ maxWidth: "40vw" }}>
               <SheetHeader>
                 <SheetTitle>Invite new user</SheetTitle>
-                <SheetDescription>
-                 {/* Description */}
-                </SheetDescription>
+                <SheetDescription>{/* Description */}</SheetDescription>
               </SheetHeader>
               <div className="grid gap-4 py-4">{/* User form */}</div>
               <SheetFooter></SheetFooter>

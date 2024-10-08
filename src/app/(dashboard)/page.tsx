@@ -15,11 +15,10 @@ export default function HomePage() {
       <div className="mt-2 grid gap-4 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-2 xl:grid-cols-4">
         <Card className="sm:col-span-2" x-chunk="dashboard-05-chunk-0">
           <CardHeader className="pb-3">
-            <CardTitle>
-              Workspace Name
-            </CardTitle>
+            <CardTitle>Workspace Name</CardTitle>
             <CardDescription className="text-balance max-w-lg leading-relaxed">
-              Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sint reprehenderit harum consectetur mollitia, nulla ex minima. 
+              Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sint
+              reprehenderit harum consectetur mollitia, nulla ex minima.
             </CardDescription>
           </CardHeader>
           <CardFooter>

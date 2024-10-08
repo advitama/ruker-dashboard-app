@@ -28,6 +28,8 @@ const navigation: Navigation[] = [
 
 const queryClient = new QueryClient();
 
+import { SessionStoreProvider } from "@/app/providers/session";
+
 export default function DashboardLayout({
   children,
 }: {
@@ -45,7 +47,9 @@ export default function DashboardLayout({
         <Sidebar navigation={navigation} />
         <div className="flex flex-col sm:py-3 sm:pl-14">
           <Header pathname={pathname} navigation={navigation} />
-          <main className="py-2 px-8">{children}</main>
+          <main className="py-2 px-8">
+            <SessionStoreProvider>{children}</SessionStoreProvider>
+          </main>
         </div>
         <Toaster />
         <ReactQueryDevtools />
