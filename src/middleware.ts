@@ -1,17 +1,8 @@
 import { env } from "./config/env";
-import { AUTH_API } from "./lib/api/auth";
+import AUTH_API from "./lib/api/auth";
 import { NextRequest, NextResponse } from "next/server";
 
 export default async function middleware(req: NextRequest) {
-  const accessToken = req.cookies.get("access_token")?.value;
-
-  if (!accessToken) {
-    // Redirect to the login page if no access token is found
-    return redirectToLogin(req);
-  }
-
-  AUTH_API.defaults.headers.Authorization = `Bearer ${accessToken}`;
-
   try {
     const { data } = await AUTH_API.get("/user/profile");
 

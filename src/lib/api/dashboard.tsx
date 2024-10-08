@@ -1,7 +1,7 @@
 "use client";
 
 import axios, { InternalAxiosRequestConfig } from "axios";
-import { getAccessToken } from "@/utils/function/session";
+import { getAccessToken } from "@/utils/function/access-token";
 
 import { toast } from "@/components/ui/use-toast";
 
