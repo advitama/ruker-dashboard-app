@@ -31,7 +31,7 @@ import {
 } from "@/components/ui/form";
 
 // Import React query components
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation } from "@tanstack/react-query";
 
 // Import Dashboard API
 import DASHBOARD_API from "@/lib/api/dashboard";
@@ -49,7 +49,33 @@ export function CreateWorkspace() {
 
   const { toast } = useToast();
 
-  function onSubmit(data: z.infer<typeof FormSchema>) {
+  const { mutateAsync, isPending } = useMutation({
+    mutationFn: async (data: z.infer<typeof FormSchema>) => {
+      try {
+        const response = await DASHBOARD_API.post("/company", {
+          ...data,
+          industry_id: parseInt(data.industry),
+        });
+        console.log(response);
+      } catch (error) {
+        throw new Error((error as any).response?.data?.message);
+      }
+    },
+    onSuccess: () => {
+      toast({
+        title: "Successfull",
+        description: "OK"
+      })
+    },
+    onError: () => {
+       toast({
+         title: "Failed",
+         description: "OK",
+       });
+    }
+  });
+
+  async function onSubmit(data: z.infer<typeof FormSchema>) {
     toast({
       title: "You submitted the following values:",
       description: (
@@ -58,6 +84,7 @@ export function CreateWorkspace() {
         </pre>
       ),
     });
+    await mutateAsync(data);
   }
 
   const { data, isFetched } = useQuery({

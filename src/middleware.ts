@@ -3,7 +3,6 @@ import { AUTH_API } from "./lib/api/auth";
 import { NextRequest, NextResponse } from "next/server";
 
 export default async function middleware(req: NextRequest) {
-  const { pathname } = req.nextUrl;
   const accessToken = req.cookies.get("access_token")?.value;
 
   if (!accessToken) {
@@ -14,7 +13,7 @@ export default async function middleware(req: NextRequest) {
   AUTH_API.defaults.headers.Authorization = `Bearer ${accessToken}`;
 
   try {
-    const { data } = await AUTH_API.get("/profile");
+    const { data } = await AUTH_API.get("/user/profile");
 
     // Proceed if the user is verified, otherwise redirect to the email verification page
     return data.verified ? NextResponse.next() : redirectToVerifyEmail(req);

@@ -18,11 +18,12 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 // import icons
-import { Home } from "lucide-react";
+import { Home, Users } from "lucide-react";
 
 const navigation: Navigation[] = [
   { name: "Overview", href: "/", icon: Home },
   { name: "New workspace", href: "/new-workspace", icon: Home, hidden: true },
+  { name: "User management", href: "/user-management", icon: Users },
 ];
 
 const queryClient = new QueryClient();
@@ -47,6 +48,7 @@ export default function DashboardLayout({
           <main className="py-2 px-8">{children}</main>
         </div>
         <Toaster />
+        <ReactQueryDevtools />
       </div>
     </QueryClientProvider>
   );
