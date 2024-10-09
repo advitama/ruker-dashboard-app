@@ -34,9 +34,15 @@ import DASHBOARD_API from "@/lib/api/dashboard";
 // Import types
 import type { Company } from "@/features/company/types/company";
 
-export function Combobox() {
+// Import the custom hook
+import { useCompany } from "@/features/company/hooks/use-company";
+
+export function CompanyCombobox() {
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState("");
+
+  const setCompany = useCompany((store) => store.setCompany);
+  const { name } = useCompany((state) => state);
 
   const { data, isFetched } = useQuery({
     queryKey: ["companies"],
@@ -46,6 +52,20 @@ export function Combobox() {
     },
   });
 
+  const handleSelect = (currentValue: string) => {
+    const selectedCompany = data?.find(
+      (company: Company) => company.name === currentValue
+    );
+
+    if (selectedCompany) {
+      setCompany(selectedCompany);
+
+      setValue(currentValue === value ? "" : currentValue);
+      setOpen(false);
+    }
+  };
+
+  console.log(name);
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
@@ -71,17 +91,8 @@ export function Combobox() {
                 <CommandItem
                   key={company.id}
                   value={company.name}
-                  onSelect={(currentValue: React.SetStateAction<string>) => {
-                    setValue(currentValue === value ? "" : currentValue);
-                    setOpen(false);
-                  }}
+                  onSelect={handleSelect}
                 >
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  {/* <img
-                    src={company.image}
-                    alt={`${company.label} logo`}
-                    className="w-6 h-6 rounded-md mr-2"
-                  /> */}
                   {company.name}
                   <CheckIcon
                     className={cn(

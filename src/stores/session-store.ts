@@ -4,7 +4,7 @@ import type { Session } from "@/types/session";
 
 export type SessionStore = Session;
 
-export const initSessionStore = async () => {
+export const initSessionStore = async (): Promise<Session> => {
   const { data } = await AUTH_API.get("/user/profile");
 
   return {
@@ -22,9 +22,7 @@ export const defaultInitState: Session = {
   lastName: "",
 };
 
-export const createSessionStore = (
-  initState: Session = defaultInitState
-) => {
+export const createSessionStore = (initState: Session = defaultInitState) => {
   return createStore<SessionStore>()(() => ({
     ...initState,
   }));

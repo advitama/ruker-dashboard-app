@@ -32,7 +32,7 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 
 // Import custom components
 import { ModeToggle } from "@/components/util/mode-toggle";
-import { Combobox } from "@/features/company/components/form/company-combobox";
+import { CompanyCombobox } from "@/features/company/components/form/company-combobox";
 
 // Import types and utility functions
 import type { Navigation } from "@/types/navigation";
@@ -63,7 +63,7 @@ export function Header({
       <header className="sticky top-0 z-30 flex h-14 items-center gap-4 border-b bg-background px-4 sm:static sm:h-auto sm:border-0 sm:bg-transparent sm:px-6">
         {/* User combobox */}
         <div className="hidden sm:flex">
-          <Combobox />
+          <CompanyCombobox />
         </div>
 
         {/* Mobile menu button and sidebar */}
@@ -152,7 +152,7 @@ export function Header({
 
       {/* Workspace combobox */}
       <div className="sm:hidden mt-2 px-2">
-        <Combobox />
+        <CompanyCombobox />
       </div>
 
       <Separator className="hidden sm:block mt-3" />
