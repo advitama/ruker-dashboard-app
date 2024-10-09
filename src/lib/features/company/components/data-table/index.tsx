@@ -46,7 +46,12 @@ import { DataTablePagination } from "@/components/data-table/pagination";
 import { DataTableViewOptions } from "@/components/data-table/view-options";
 
 // Import hooks
-import { useState } from "react";
+import { useEffect, useState, useMemo } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { useCompany } from "@/lib/features/company/hooks/use-company";
+
+// Import API
+import DASHBOARD_API from "@/lib/api/dashboard";
 
 // Import transaction components
 import { columns } from "./column";
@@ -59,18 +64,30 @@ export function UserDataTable<TData, TValue>() {
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = useState({});
 
-  const [isLoading, setIsLoading] = useState(true);
-  const [users, setUsers] = useState<TData[]>([]);
+  const { id } = useCompany((state) => state);
+
+  const { data = [], isLoading } = useQuery({
+    queryKey: ["users", id],
+    queryFn: async () => {
+      const response = await DASHBOARD_API.get(`/company/user/${id}`);
+      return response.data;
+    },
+    enabled: !!id,
+  });
+
+  const tableData = useMemo(() => data as TData[], [data]);
+
+  console.table(tableData);
 
   const table = useReactTable({
-    data: (users as TData[]) ?? [],
+    data: tableData,
     columns: columns as ColumnDef<TData, TValue>[],
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
-    onSortingChange: setSorting,
     getSortedRowModel: getSortedRowModel(),
-    onColumnFiltersChange: setColumnFilters,
     getFilteredRowModel: getFilteredRowModel(),
+    onSortingChange: setSorting,
+    onColumnFiltersChange: setColumnFilters,
     onColumnVisibilityChange: setColumnVisibility,
     onRowSelectionChange: setRowSelection,
     state: {
@@ -156,7 +173,7 @@ export function UserDataTable<TData, TValue>() {
                     colSpan={columns.length}
                     className="h-24 space-y-1"
                   >
-                    {Array.from({ length: 5 }).map((_, index) => (
+                    {Array.from({ length: 10 }).map((_, index) => (
                       <Skeleton key={index} className="w-full h-6" />
                     ))}
                   </TableCell>
@@ -164,7 +181,7 @@ export function UserDataTable<TData, TValue>() {
               </>
             ) : (
               <>
-                {table.getRowModel().rows?.length ? (
+                {table.getRowModel().rows.length ? (
                   table.getRowModel().rows.map((row) => (
                     <TableRow
                       key={row.id}
@@ -186,7 +203,7 @@ export function UserDataTable<TData, TValue>() {
                       colSpan={columns.length}
                       className="h-24 text-center"
                     >
-                      No transaction.
+                      No users.
                     </TableCell>
                   </TableRow>
                 )}

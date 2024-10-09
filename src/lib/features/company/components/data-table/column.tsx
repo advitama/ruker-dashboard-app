@@ -52,12 +52,12 @@ export const columns: ColumnDef<User>[] = [
     },
   },
   {
-    accessorKey: "role",
+    accessorKey: "role_id",
     header: ({ column }) => {
       return <DataTableColumnHeader column={column} title="Role" />;
     },
     cell: ({ row }) => {
-      const role = row.getValue("role");
+      const role = row.getValue("role_id");
       return <Badge variant="outline">{role as React.ReactNode}</Badge>;
     },
   },
