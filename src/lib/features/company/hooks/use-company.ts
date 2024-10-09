@@ -1,7 +1,7 @@
 "use client";
 
-import { useContext } from "react";
 import { useStore } from "zustand";
+import { useEffect, useContext } from "react";
 import { CompanyStoreContext } from "@/app/providers/company";
 import type { CompanyStore } from "@/lib/features/company/stores/company-store";
 
@@ -9,8 +9,15 @@ export const useCompany = <T>(selector: (store: CompanyStore) => T): T => {
   const companyStoreContext = useContext(CompanyStoreContext);
 
   if (!companyStoreContext) {
-    throw new Error(`useCompanyStore must be used within CompanyStoreProvider`);
+    throw new Error(`useCompany must be used within CompanyStoreProvider`);
   }
 
-  return useStore(companyStoreContext, selector);
+  const store = useStore(companyStoreContext, selector);
+
+  useEffect(() => {
+    const loadCompany = companyStoreContext.getState().loadCompanyFromStorage;
+    loadCompany(); 
+  }, [companyStoreContext]);
+
+  return store;
 };

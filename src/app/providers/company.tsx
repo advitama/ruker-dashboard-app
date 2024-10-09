@@ -12,6 +12,8 @@ import {
   createCompanyStore,
   initCompanyStore,
 } from "@/lib/features/company/stores/company-store";
+import { Button } from "@/components/ui/button";
+import { LoaderCircle } from "lucide-react";
 
 export type CompanyStoreApi = ReturnType<typeof createCompanyStore>;
 
@@ -40,7 +42,14 @@ export const CompanyStoreProvider = ({
   }, []);
 
   if (!isInitialized) {
-    return <div>Loading...</div>;
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <Button variant={"outline"} disabled>
+          <LoaderCircle className="w-4 h-4 animate-spin mr-2" />
+          Loading...
+        </Button>
+      </div>
+    );
   }
 
   return (

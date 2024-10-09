@@ -1,7 +1,7 @@
 "use client";
 
 // import hooks from react
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 // import utils
 import { cn } from "@/utils";
@@ -41,6 +41,7 @@ export function CompanyCombobox() {
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState("");
 
+  // Access the setCompany action and current name from the store
   const setCompany = useCompany((store) => store.setCompany);
   const { name } = useCompany((state) => state);
 
@@ -51,6 +52,12 @@ export function CompanyCombobox() {
       return response.data;
     },
   });
+
+  useEffect(() => {
+    if (name) {
+      setValue(name);
+    }
+  }, [name]);
 
   const handleSelect = (currentValue: string) => {
     const selectedCompany = data?.find(
@@ -65,7 +72,6 @@ export function CompanyCombobox() {
     }
   };
 
-  console.log(name);
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
@@ -91,7 +97,7 @@ export function CompanyCombobox() {
                 <CommandItem
                   key={company.id}
                   value={company.name}
-                  onSelect={handleSelect}
+                  onSelect={() => handleSelect(company.name)}
                 >
                   {company.name}
                   <CheckIcon
