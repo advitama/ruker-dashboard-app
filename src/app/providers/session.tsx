@@ -6,12 +6,11 @@ import {
   useRef,
   useState,
   useEffect,
-  useContext,
 } from "react";
-import {
-  createSessionStore,
-  initSessionStore,
-} from "@/stores/session-store";
+import { createSessionStore, initSessionStore } from "@/stores/session-store";
+
+import { Button } from "@/components/ui/button";
+import { LoaderCircle } from "lucide-react";
 
 export type SessionStoreApi = ReturnType<typeof createSessionStore>;
 
@@ -33,14 +32,21 @@ export const SessionStoreProvider = ({
     const initializeStore = async () => {
       const initialState = await initSessionStore();
       storeRef.current = createSessionStore(initialState);
-      setLoading(false); 
+      setLoading(false);
     };
 
     initializeStore();
   }, []);
 
   if (loading) {
-    return <div>Loading...</div>;
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <Button variant={"outline"} disabled>
+          <LoaderCircle className="w-4 h-4 animate-spin mr-2" />
+          Loading...
+        </Button>
+      </div>
+    );
   }
 
   return (

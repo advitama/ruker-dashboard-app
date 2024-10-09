@@ -1,3 +1,5 @@
+"use client";
+
 // Import React hooks and utilities
 import { createElement } from "react";
 import { cn } from "@/utils";
@@ -40,6 +42,9 @@ import { logout } from "@/utils/function/logout";
 import { Search, PanelLeft } from "lucide-react";
 import RukerSmallIcon from "@/assets/icons/ruker-small.png";
 
+// Import hooks
+import { useSession } from "@/hooks/use-session";
+
 /**
  * Header component for navigation and search functionality
  */
@@ -50,6 +55,8 @@ export function Header({
   pathname: string;
   navigation: Navigation[];
 }) {
+  const { firstName, lastName } = useSession((state) => state);
+
   return (
     <>
       {/* Header section */}
@@ -123,7 +130,9 @@ export function Header({
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
-            <DropdownMenuLabel>My Account</DropdownMenuLabel>
+            <DropdownMenuLabel>
+              {firstName} {lastName}
+            </DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuItem>Settings</DropdownMenuItem>
             <DropdownMenuItem>Support</DropdownMenuItem>

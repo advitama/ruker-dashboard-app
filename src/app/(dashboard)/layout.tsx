@@ -43,17 +43,17 @@ export default function DashboardLayout({
 
   return (
     <QueryClientProvider client={queryClient}>
-      <div className="flex min-h-screen w-full flex-col bg-muted/40">
-        <Sidebar navigation={navigation} />
-        <div className="flex flex-col sm:py-3 sm:pl-14">
-          <Header pathname={pathname} navigation={navigation} />
-          <main className="py-2 px-8">
-            <SessionStoreProvider>{children}</SessionStoreProvider>
-          </main>
+      <SessionStoreProvider>
+        <div className="flex min-h-screen w-full flex-col bg-muted/40">
+          <Sidebar navigation={navigation} />
+          <div className="flex flex-col sm:py-3 sm:pl-14">
+            <Header pathname={pathname} navigation={navigation} />
+            <main className="py-2 px-8">{children}</main>
+          </div>
+          <Toaster />
+          <ReactQueryDevtools />
         </div>
-        <Toaster />
-        <ReactQueryDevtools />
-      </div>
+      </SessionStoreProvider>
     </QueryClientProvider>
   );
 }
