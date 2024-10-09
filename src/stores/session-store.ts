@@ -1,14 +1,8 @@
 import AUTH_API from "@/lib/api/auth";
 import { createStore } from "zustand/vanilla";
+import type { Session } from "@/types/session";
 
-export type SessionState = {
-  id: string;
-  email: string;
-  firstName: string;
-  lastName: string;
-};
-
-export type SessionStore = SessionState;
+export type SessionStore = Session;
 
 export const initSessionStore = async () => {
   const { data } = await AUTH_API.get("/user/profile");
@@ -21,7 +15,7 @@ export const initSessionStore = async () => {
   };
 };
 
-export const defaultInitState: SessionState = {
+export const defaultInitState: Session = {
   id: "",
   email: "",
   firstName: "",
@@ -29,7 +23,7 @@ export const defaultInitState: SessionState = {
 };
 
 export const createSessionStore = (
-  initState: SessionState = defaultInitState
+  initState: Session = defaultInitState
 ) => {
   return createStore<SessionStore>()(() => ({
     ...initState,

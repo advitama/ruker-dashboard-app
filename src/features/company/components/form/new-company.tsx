@@ -19,7 +19,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
+// import hooks
 import { useToast } from "@/hooks/use-toast";
+
 import {
   Form,
   FormControl,
@@ -29,13 +31,13 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
 
-// Import React query components
+// Import React query hooks
 import { useQuery, useMutation } from "@tanstack/react-query";
 
 // Import Dashboard API
 import DASHBOARD_API from "@/lib/api/dashboard";
-import { Input } from "@/components/ui/input";
 
 const FormSchema = z.object({
   name: z.string(),

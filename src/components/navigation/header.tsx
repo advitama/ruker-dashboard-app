@@ -32,7 +32,7 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 
 // Import custom components
 import { ModeToggle } from "@/components/util/mode-toggle";
-import { Combobox } from "@/components/form/combobox";
+import { Combobox } from "@/features/company/components/form/company-combobox";
 
 // Import types and utility functions
 import type { Navigation } from "@/types/navigation";
