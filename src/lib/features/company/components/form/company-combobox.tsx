@@ -32,10 +32,10 @@ import { useQuery } from "@tanstack/react-query";
 import DASHBOARD_API from "@/lib/api/dashboard";
 
 // Import types
-import type { Company } from "@/features/company/types/company";
+import type { Company } from "@/lib/features/company/types/company";
 
 // Import the custom hook
-import { useCompany } from "@/features/company/hooks/use-company";
+import { useCompany } from "@/lib/features/company/hooks/use-company";
 
 export function CompanyCombobox() {
   const [open, setOpen] = useState(false);

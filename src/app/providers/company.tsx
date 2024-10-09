@@ -11,7 +11,7 @@ import {
 import {
   createCompanyStore,
   initCompanyStore,
-} from "@/features/company/stores/company-store";
+} from "@/lib/features/company/stores/company-store";
 
 export type CompanyStoreApi = ReturnType<typeof createCompanyStore>;
 

@@ -1,4 +1,4 @@
-import { CreateWorkspace } from "@/features/company/components/form/new-company";
+import { CreateWorkspace } from "@/lib/features/company/components/form/new-company";
 
 export default function NewWorkspacePage() {
   return (

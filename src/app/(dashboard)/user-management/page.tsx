@@ -1,4 +1,4 @@
-import { UserDataTable } from "@/features/company/components/data-table";
+import { UserDataTable } from "@/lib/features/company/components/data-table";
 
 export default function UserManagementPage() {
   return <div className="container mx-auto py-10">

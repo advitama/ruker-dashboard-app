@@ -1,5 +1,5 @@
 import { createStore } from "zustand/vanilla";
-import type { Company } from "@/features/company/types/company";
+import type { Company } from "@/lib/features/company/types/company";
 
 export type CompanyActions = {
   setCompany: (company: Company) => void;
