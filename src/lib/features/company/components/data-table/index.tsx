@@ -48,7 +48,7 @@ import { DataTableViewOptions } from "@/components/data-table/view-options";
 // Import hooks
 import { useEffect, useState, useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { useCompany } from "@/lib/features/company/hooks/use-company";
+import { useCompany } from "@/lib/features/hooks/use-company";
 
 // Import API
 import DASHBOARD_API from "@/lib/api/dashboard";

@@ -32,7 +32,7 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 
 // Import custom components
 import { ModeToggle } from "@/components/util/mode-toggle";
-import { CompanyCombobox } from "@/lib/features/company/components/form/company-combobox";
+import { WorkspaceCombobox } from "@/lib/features/workspace/components/form/workspace-combobox";
 
 // Import types and utility functions
 import type { Navigation } from "@/types/navigation";
@@ -44,6 +44,7 @@ import RukerSmallIcon from "@/assets/icons/ruker-small.png";
 
 // Import hooks
 import { useSession } from "@/hooks/use-session";
+import { useCompany } from "@/lib/features/hooks/use-company";
 
 /**
  * Header component for navigation and search functionality
@@ -56,6 +57,9 @@ export function Header({
   navigation: Navigation[];
 }) {
   const { firstName, lastName } = useSession((state) => state);
+  const deleteSelectedCompany = useCompany(
+    (store) => store.deleteSelectedCompany
+  );
 
   return (
     <>
@@ -63,7 +67,7 @@ export function Header({
       <header className="sticky top-0 z-30 flex h-14 items-center gap-4 border-b bg-background px-4 sm:static sm:h-auto sm:border-0 sm:bg-transparent sm:px-6">
         {/* User combobox */}
         <div className="hidden sm:flex">
-          <CompanyCombobox />
+          <WorkspaceCombobox />
         </div>
 
         {/* Mobile menu button and sidebar */}
@@ -139,6 +143,7 @@ export function Header({
             <DropdownMenuSeparator />
             <DropdownMenuItem
               onClick={() => {
+                deleteSelectedCompany();
                 logout().then(() => {
                   window.location.reload();
                 });
@@ -152,7 +157,7 @@ export function Header({
 
       {/* Workspace combobox */}
       <div className="sm:hidden mt-2 px-2">
-        <CompanyCombobox />
+        <WorkspaceCombobox />
       </div>
 
       <Separator className="hidden sm:block mt-3" />

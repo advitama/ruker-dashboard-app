@@ -22,14 +22,15 @@ import { Home, Users } from "lucide-react";
 
 const navigation: Navigation[] = [
   { name: "Overview", href: "/", icon: Home },
-  { name: "New workspace", href: "/new-workspace", icon: Home, hidden: true },
   { name: "User management", href: "/user-management", icon: Users },
+  { name: "Add New Company", href: "/add-company", icon: Home, hidden: true },
 ];
 
-const queryClient = new QueryClient();
-
+// Import providers
 import { SessionStoreProvider } from "@/app/providers/session";
 import { CompanyStoreProvider } from "@/app/providers/company";
+
+const queryClient = new QueryClient();
 
 export default function DashboardLayout({
   children,

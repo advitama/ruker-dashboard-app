@@ -3,19 +3,36 @@ import AUTH_API from "./lib/api/auth";
 import { NextRequest, NextResponse } from "next/server";
 
 export default async function middleware(req: NextRequest) {
+  const currentPath = req.nextUrl.pathname;
+
   try {
     const { data } = await AUTH_API.get("/user/profile");
 
-    // Proceed if the user is verified, otherwise redirect to the email verification page
-    return data.verified ? NextResponse.next() : redirectToVerifyEmail(req);
+    if (data.verified) {
+      if (data.new_user && currentPath !== "/onboarding") {
+        return redirectToOnBoarding(req);
+      } else if (!data.new_user && currentPath === "/onboarding") {
+        return redirectToHome(req);
+      }
+    } else {
+      return redirectToVerifyEmail(req);
+    }
   } catch (error) {
-    const status = (error as any)?.response?.status;
-
-    // Redirect to login page if unauthorized, else handle other errors
-    return status === 401 ? redirectToLogin(req) : redirectToLogin(req); // Optionally, handle other error cases differently
+    return handleError(error, req);
   }
-}
 
+  return NextResponse.next();
+}
+const handleError = (error: any, req: NextRequest) => {
+  const status = error?.response?.status;
+
+  if (status === 401 || status === 403) {
+    return redirectToLogin(req);
+  }
+
+  console.error("Unhandled error:", error);
+  return NextResponse.next();
+};
 const redirectToLogin = (req: NextRequest) =>
   NextResponse.redirect(
     new URL(`${env.NEXT_PUBLIC_AUTH_APP_URL}/login`, req.nextUrl)
@@ -26,6 +43,12 @@ const redirectToVerifyEmail = (req: NextRequest) =>
     new URL(`${env.NEXT_PUBLIC_AUTH_APP_URL}/verify-email`, req.nextUrl)
   );
 
+const redirectToOnBoarding = (req: NextRequest) =>
+  NextResponse.redirect(new URL("/onboarding", req.nextUrl));
+
+const redirectToHome = (req: NextRequest) =>
+  NextResponse.redirect(new URL("/", req.nextUrl));
+
 export const config = {
-  matcher: ["/((?!api|_next/static|_next/image|.*\\.png$).*)"],
+  matcher: ["/((?!api|_next/static|_next/image|verify-email|.*\\.png$).*)"],
 };

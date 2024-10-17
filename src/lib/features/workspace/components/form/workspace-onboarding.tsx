@@ -1,4 +1,4 @@
-"use client"; // Make sure this is at the top
+"use client";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -39,12 +39,16 @@ import { useQuery, useMutation } from "@tanstack/react-query";
 // Import Dashboard API
 import DASHBOARD_API from "@/lib/api/dashboard";
 
+// Import icon
+import { LoaderCircle } from "lucide-react";
+
 const FormSchema = z.object({
   name: z.string(),
   industry: z.string(),
+  size: z.string(),
 });
 
-export function CreateWorkspace() {
+export function WorkspaceOnboarding() {
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
   });
@@ -54,38 +58,32 @@ export function CreateWorkspace() {
   const { mutateAsync, isPending } = useMutation({
     mutationFn: async (data: z.infer<typeof FormSchema>) => {
       try {
-        const response = await DASHBOARD_API.post("/company", {
+        await DASHBOARD_API.post("/company", {
           ...data,
           industry_id: parseInt(data.industry),
         });
-        console.log(response);
       } catch (error) {
         throw new Error((error as any).response?.data?.message);
       }
     },
     onSuccess: () => {
       toast({
-        title: "Successfull",
-        description: "OK"
-      })
+        title: "Workspace Created Successfully",
+        description: "Your workspace has been created and saved successfully.",
+      });
+      window.location.reload();
     },
-    onError: () => {
-       toast({
-         title: "Failed",
-         description: "OK",
-       });
-    }
+    onError: (error) => {
+      toast({
+        title: "Creation Failed",
+        description:
+          (error as any)?.message ||
+          "There was an error creating your workspace. Please try again.",
+      });
+    },
   });
 
   async function onSubmit(data: z.infer<typeof FormSchema>) {
-    toast({
-      title: "You submitted the following values:",
-      description: (
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-        </pre>
-      ),
-    });
     await mutateAsync(data);
   }
 
@@ -97,10 +95,12 @@ export function CreateWorkspace() {
     },
   });
 
+  const sizes = ["Just yourself", "2-10", "11-50", "51-200", "201-500", "500+"];
+
   return (
     <Card className="w-full mt-4">
       <CardHeader>
-        <CardTitle>Create New Workspace</CardTitle>
+        <CardTitle>Create Your Workspace</CardTitle>
       </CardHeader>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
@@ -111,9 +111,9 @@ export function CreateWorkspace() {
                 name="name"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Company name</FormLabel>
+                    <FormLabel>Workspace name</FormLabel>
                     <FormControl>
-                      <Input placeholder="Your company name" {...field} />
+                      <Input placeholder="Your workspace name" {...field} />
                     </FormControl>
                     <FormDescription></FormDescription>
                     <FormMessage />
@@ -132,7 +132,14 @@ export function CreateWorkspace() {
                     >
                       <FormControl>
                         <SelectTrigger>
-                          <SelectValue placeholder="Select an industry" />
+                          {isFetched ? (
+                            <SelectValue placeholder="Select an industry" />
+                          ) : (
+                            <div className="flex justify-start gap-2">
+                              <LoaderCircle className="h-4 w-4 animate-spin" />
+                              Loading industries
+                            </div>
+                          )}
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
@@ -151,16 +158,39 @@ export function CreateWorkspace() {
                   </FormItem>
                 )}
               />
+              <FormField
+                control={form.control}
+                name="size"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Company size</FormLabel>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select organization size" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {sizes?.map((size) => (
+                          <SelectItem key={size} value={size}>
+                            {size}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <FormDescription></FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
             </div>
           </CardContent>
           <CardFooter className="flex justify-between">
-            <Button type="submit">Create Workspace</Button>
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => (window.location.href = "/")}
-            >
-              Skip
+            <Button type="submit" className="w-full">
+              Continue
             </Button>
           </CardFooter>
         </form>

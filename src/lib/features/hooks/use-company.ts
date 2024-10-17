@@ -16,7 +16,7 @@ export const useCompany = <T>(selector: (store: CompanyStore) => T): T => {
 
   useEffect(() => {
     const loadCompany = companyStoreContext.getState().loadCompanyFromStorage;
-    loadCompany(); 
+    loadCompany();
   }, [companyStoreContext]);
 
   return store;

@@ -26,7 +26,7 @@ AUTH_API.interceptors.request.use(
 
 AUTH_API.interceptors.response.use(
   (response) => {
-    return response;
+    return response.data;
   },
   (error) => {
     console.error("API Error", error);

@@ -28,7 +28,7 @@ DASHBOARD_API.interceptors.request.use(
 
 DASHBOARD_API.interceptors.response.use(
   (response) => {
-    return response;
+    return response.data;
   },
   (error) => {
     console.error("API Error", error);

@@ -35,14 +35,17 @@ import DASHBOARD_API from "@/lib/api/dashboard";
 import type { Company } from "@/lib/features/company/types/company";
 
 // Import the custom hook
-import { useCompany } from "@/lib/features/company/hooks/use-company";
+import { useCompany } from "@/lib/features/hooks/use-company";
 
-export function CompanyCombobox() {
+export function WorkspaceCombobox() {
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState("");
 
-  // Access the setCompany action and current name from the store
   const setCompany = useCompany((store) => store.setCompany);
+  const deleteSelectedCompany = useCompany(
+    (store) => store.deleteSelectedCompany
+  );
+
   const { name } = useCompany((state) => state);
 
   const { data, isFetched } = useQuery({
@@ -54,10 +57,21 @@ export function CompanyCombobox() {
   });
 
   useEffect(() => {
-    if (name) {
-      setValue(name);
+    if (isFetched && data) {
+      // Check if the company exists first
+      const companyExists = data.some(
+        (company: Company) => company.name === name
+      );
+
+      if (!companyExists) {
+        // If the company doesn't exist, delete it from the state
+        deleteSelectedCompany();
+      } else if (name) {
+        // If the company exists, set the value to the company name
+        setValue(name);
+      }
     }
-  }, [name]);
+  }, [name, data, deleteSelectedCompany, isFetched]);
 
   const handleSelect = (currentValue: string) => {
     const selectedCompany = data?.find(
@@ -66,7 +80,6 @@ export function CompanyCombobox() {
 
     if (selectedCompany) {
       setCompany(selectedCompany);
-
       setValue(currentValue === value ? "" : currentValue);
       setOpen(false);
     }

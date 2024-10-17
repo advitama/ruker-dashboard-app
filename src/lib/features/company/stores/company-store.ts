@@ -4,6 +4,7 @@ import type { Company } from "@/lib/features/company/types/company";
 export type CompanyActions = {
   setCompany: (company: Company) => void;
   loadCompanyFromStorage: () => void;
+  deleteSelectedCompany: () => void;
 };
 
 export type CompanyStore = Company & CompanyActions;
@@ -25,6 +26,7 @@ export const defaultInitState: Company = {
 export const createCompanyStore = (initState: Company = defaultInitState) => {
   return createStore<CompanyStore>()((set) => ({
     ...initState,
+
     setCompany: (company: Company) => {
       localStorage.setItem("selectedCompany", JSON.stringify(company));
 
@@ -37,14 +39,26 @@ export const createCompanyStore = (initState: Company = defaultInitState) => {
 
     loadCompanyFromStorage: () => {
       const savedCompany = localStorage.getItem("selectedCompany");
+
       if (savedCompany) {
-        const company: Company = JSON.parse(savedCompany);
-        set(() => ({
-          id: company.id,
-          name: company.name,
-          industry: company.industry,
-        }));
+        try {
+          const parsedCompany: Company = JSON.parse(savedCompany);
+
+          if (typeof parsedCompany === "object" && parsedCompany !== null) {
+            set(() => ({
+              id: parsedCompany.id,
+              name: parsedCompany.name,
+              industry: parsedCompany.industry,
+            }));
+          } else {
+            localStorage.removeItem("selectedCompany");
+          }
+        } catch (error) {
+          localStorage.removeItem("selectedCompany");
+        }
       }
     },
+
+    deleteSelectedCompany: () => localStorage.removeItem("selectedCompany"),
   }));
 };
