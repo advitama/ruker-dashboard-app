@@ -1,3 +1,4 @@
+import { AxiosError } from "axios";
 import { env } from "./config/env";
 import AUTH_API from "./lib/api/auth";
 import { NextRequest, NextResponse } from "next/server";
@@ -18,13 +19,14 @@ export default async function middleware(req: NextRequest) {
       return redirectToVerifyEmail(req);
     }
   } catch (error) {
-    return handleError(error, req);
+    return handleError(error as AxiosError, req);
   }
 
   return NextResponse.next();
 }
-const handleError = (error: any, req: NextRequest) => {
-  const status = error?.response?.status;
+
+const handleError = (error: AxiosError, req: NextRequest) => {
+  const status = error.response?.status;
 
   if (status === 401 || status === 403) {
     return redirectToLogin(req);
@@ -33,6 +35,7 @@ const handleError = (error: any, req: NextRequest) => {
   console.error("Unhandled error:", error);
   return NextResponse.next();
 };
+
 const redirectToLogin = (req: NextRequest) =>
   NextResponse.redirect(
     new URL(`${env.NEXT_PUBLIC_AUTH_APP_URL}/login`, req.nextUrl)

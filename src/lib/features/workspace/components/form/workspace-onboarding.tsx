@@ -42,6 +42,8 @@ import DASHBOARD_API from "@/lib/api/dashboard";
 // Import icon
 import { LoaderCircle } from "lucide-react";
 
+import { AxiosError } from "axios";
+
 const FormSchema = z.object({
   name: z.string(),
   industry: z.string(),
@@ -55,7 +57,7 @@ export function WorkspaceOnboarding() {
 
   const { toast } = useToast();
 
-  const { mutateAsync, isPending } = useMutation({
+  const { mutateAsync } = useMutation({
     mutationFn: async (data: z.infer<typeof FormSchema>) => {
       try {
         await DASHBOARD_API.post("/company", {
@@ -63,7 +65,7 @@ export function WorkspaceOnboarding() {
           industry_id: parseInt(data.industry),
         });
       } catch (error) {
-        throw new Error((error as any).response?.data?.message);
+        throw new Error((error as AxiosError).message);
       }
     },
     onSuccess: () => {
@@ -77,7 +79,7 @@ export function WorkspaceOnboarding() {
       toast({
         title: "Creation Failed",
         description:
-          (error as any)?.message ||
+          (error as AxiosError)?.message ||
           "There was an error creating your workspace. Please try again.",
       });
     },
@@ -143,7 +145,7 @@ export function WorkspaceOnboarding() {
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        {data?.map((industry: any) => (
+                        {data?.map((industry: { id: number; name: string }) => (
                           <SelectItem
                             key={industry.id}
                             value={industry.id.toString()}

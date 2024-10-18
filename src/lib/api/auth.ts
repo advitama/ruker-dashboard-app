@@ -1,7 +1,6 @@
-"use client";
-
+("");
 import { env } from "@/config/env";
-import axios, { InternalAxiosRequestConfig } from "axios";
+import axios, { AxiosError, InternalAxiosRequestConfig } from "axios";
 import { getAccessToken } from "@/utils/function/access-token";
 
 import { toast } from "@/components/ui/use-toast";
@@ -28,12 +27,10 @@ AUTH_API.interceptors.response.use(
   (response) => {
     return response.data;
   },
-  (error) => {
-    console.error("API Error", error);
-    const message = error.response?.data?.message || error.message;
+  (error: AxiosError) => {
     toast({
-      title: "Error",
-      description: message,
+      title: "An unexpected error occurred",
+      description: error.message,
     });
 
     return Promise.reject(error);

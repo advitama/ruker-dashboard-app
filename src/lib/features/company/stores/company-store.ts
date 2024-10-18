@@ -53,6 +53,7 @@ export const createCompanyStore = (initState: Company = defaultInitState) => {
           } else {
             localStorage.removeItem("selectedCompany");
           }
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         } catch (error) {
           localStorage.removeItem("selectedCompany");
         }

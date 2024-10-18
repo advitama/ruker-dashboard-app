@@ -1,4 +1,4 @@
-"use client"; // Make sure this is at the top
+"use client";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -39,6 +39,8 @@ import { useQuery, useMutation } from "@tanstack/react-query";
 // Import Dashboard API
 import DASHBOARD_API from "@/lib/api/dashboard";
 
+import { AxiosError } from "axios";
+
 const FormSchema = z.object({
   name: z.string(),
   industry: z.string(),
@@ -51,29 +53,29 @@ export function AddCompanyForm() {
 
   const { toast } = useToast();
 
-  const { mutateAsync, isPending } = useMutation({
+  const { mutateAsync } = useMutation({
     mutationFn: async (data: z.infer<typeof FormSchema>) => {
       try {
-        const response = await DASHBOARD_API.post("/company", {
+        return await DASHBOARD_API.post("/company", {
           ...data,
           industry_id: parseInt(data.industry),
         });
       } catch (error) {
-        throw new Error((error as any).response?.data?.message);
+        throw new Error((error as AxiosError).message);
       }
     },
     onSuccess: () => {
       toast({
         title: "Successfull",
-        description: "OK"
-      })
+        description: "OK",
+      });
     },
     onError: () => {
-       toast({
-         title: "Failed",
-         description: "OK",
-       });
-    }
+      toast({
+        title: "Failed",
+        description: "OK",
+      });
+    },
   });
 
   async function onSubmit(data: z.infer<typeof FormSchema>) {
@@ -88,7 +90,7 @@ export function AddCompanyForm() {
     await mutateAsync(data);
   }
 
-  const { data, isFetched } = useQuery({
+  const { data } = useQuery({
     queryKey: ["industries"],
     queryFn: async () => {
       const response = await DASHBOARD_API.get("/company/industry");
@@ -135,7 +137,7 @@ export function AddCompanyForm() {
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        {data?.map((industry: any) => (
+                        {data?.map((industry: { id: number; name: string }) => (
                           <SelectItem
                             key={industry.id}
                             value={industry.id.toString()}
