@@ -1,63 +1,35 @@
-"use client";
-
-// import hooks from next
-import { usePathname } from "next/navigation";
-
-// import ui components from shadcn/ui
-import { Toaster } from "@/components/ui/toaster";
-
-// import components from navigation
-import { Header } from "@/components/navigation/header";
-import { Sidebar } from "@/components/navigation/sidebar";
-
-// import types
-import type { Navigation } from "@/types/navigation";
-
-// Import React query components
-import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-
-// import icons
-import { Home, Users } from "lucide-react";
-
-const navigation: Navigation[] = [
-  { name: "Overview", href: "/", icon: Home },
-  { name: "User management", href: "/user-management", icon: Users },
-  { name: "Add New Company", href: "/add-company", icon: Home, hidden: true },
-];
+// import components
+import { AppNavbar } from "@/components/navigation/app-navbar";
+import { AppSidebar } from "@/components/navigation/app-sidebar";
+import { SidebarLayout, SidebarTrigger } from "@/components/ui/sidebar";
 
 // Import providers
 import { SessionStoreProvider } from "@/app/providers/session";
 import { CompanyStoreProvider } from "@/app/providers/company";
 
-const queryClient = new QueryClient();
-
-export default function DashboardLayout({
+export default async function TestLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const pathname = usePathname();
-
-  navigation.map((item) => {
-    item.current = item.href === pathname;
-  });
+  const { cookies } = await import("next/headers");
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <SessionStoreProvider>
-        <CompanyStoreProvider>
-          <div className="flex min-h-screen w-full flex-col bg-muted/40">
-            <Sidebar navigation={navigation} />
-            <div className="flex flex-col sm:py-3 sm:pl-14">
-              <Header pathname={pathname} navigation={navigation} />
-              <main className="py-2 px-8">{children}</main>
+    <SessionStoreProvider>
+      <CompanyStoreProvider>
+        <SidebarLayout
+          defaultOpen={cookies().get("sidebar:state")?.value === "true"}
+        >
+          <AppSidebar />
+          <main className="relative flex flex-1 flex-col p-2 transition-all duration-300 ease-in-out">
+            <AppNavbar />
+            <div className="h-full rounded-md p-2">{children}</div>
+            <div className="absolute bottom-0 left-0 m-4">
+              <SidebarTrigger className="border" />
             </div>
-            <Toaster />
-            <ReactQueryDevtools />
-          </div>
-        </CompanyStoreProvider>
-      </SessionStoreProvider>
-    </QueryClientProvider>
+          </main>
+        </SidebarLayout>
+      </CompanyStoreProvider>
+    </SessionStoreProvider>
   );
 }
