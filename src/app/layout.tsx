@@ -34,17 +34,16 @@ export default function RootLayout({
         <div id="__next">
           <ThemeProvider
             attribute="class"
-            defaultTheme="system"
+            defaultTheme="Light"
             storageKey="theme"
-            disableTransitionOnChange
             enableSystem
+            disableTransitionOnChange
           >
             {children}
+            <div className="absolute bottom-0 right-0 m-4">
+              <ModeToggle />
+            </div>
           </ThemeProvider>
-        </div>
-
-        <div className="absolute bottom-0 right-0 m-4">
-          <ModeToggle />
         </div>
       </body>
     </html>
