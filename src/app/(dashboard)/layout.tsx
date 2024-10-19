@@ -1,7 +1,7 @@
 // import components
+import { SidebarLayout } from "@/components/ui/sidebar";
 import { AppNavbar } from "@/components/navigation/app-navbar";
 import { AppSidebar } from "@/components/navigation/app-sidebar";
-import { SidebarLayout } from "@/components/ui/sidebar";
 
 // Import providers
 import { SessionStoreProvider } from "@/app/providers/session";
