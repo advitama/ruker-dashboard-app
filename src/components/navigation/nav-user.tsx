@@ -1,8 +1,6 @@
-// import icons
-import { Settings, ChevronsUpDown, LogOut } from "lucide-react";
+"use client";
 
-// Import components
-import { Avatar, AvatarImage } from "@/components/ui/avatar";
+// import components
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -12,84 +10,106 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import {
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  useSidebar,
+} from "@/components/ui/sidebar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
-// Import hooks
+// import hooks
 import { useSession } from "@/hooks/use-session";
 import { useCompany } from "@/lib/features/company/hooks/use-company";
 
 // import function
 import { logout } from "@/utils/function/logout";
 
+// icons
+import { ChevronsUpDown, Settings, LogOut } from "lucide-react";
+
 export function NavUser() {
+  const { isMobile } = useSidebar();
   const { firstName, lastName, email } = useSession((state) => state);
   const deleteSelectedCompany = useCompany(
     (store) => store.deleteSelectedCompany
   );
 
+  const initials = firstName.charAt(0) + lastName.charAt(0);
+
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger className="w-full rounded-md outline-none ring-ring hover:bg-accent focus-visible:ring-2 data-[state=open]:bg-accent">
-        <div className="flex items-center gap-2 px-2 py-1.5 text-left text-sm transition-all">
-          <Avatar className="h-7 w-7 rounded-md border">
-            <AvatarImage
-              src="/next.svg"
-              alt={firstName}
-              className="animate-in fade-in-50 zoom-in-90"
-            />
-          </Avatar>
-          <div className="grid flex-1 leading-none">
-            <div className="font-medium">
-              {firstName} {lastName}
-            </div>
-            <div className="overflow-hidden text-xs text-muted-foreground">
-              <div className="line-clamp-1">{email}</div>
-            </div>
-          </div>
-          <ChevronsUpDown className="ml-auto mr-0.5 h-4 w-4 text-muted-foreground/50" />
-        </div>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent
-        className="w-56"
-        align="end"
-        side="right"
-        sideOffset={4}
-      >
-        <DropdownMenuLabel className="p-0 font-normal">
-          <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm transition-all">
-            <Avatar className="h-7 w-7 rounded-md">
-              <AvatarImage src="/next.svg" alt={firstName} />
-            </Avatar>
-            <div className="grid flex-1">
-              <div className="font-medium">
-                {firstName} {lastName}
+    <SidebarMenu>
+      <SidebarMenuItem>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <SidebarMenuButton
+              size="lg"
+              className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
+            >
+              <Avatar className="h-8 w-8 rounded-lg">
+                <AvatarImage
+                  src="/next.svg"
+                  alt={`${firstName}'s profile pic`}
+                />
+                <AvatarFallback className="rounded-lg">
+                  {initials}
+                </AvatarFallback>
+              </Avatar>
+              <div className="grid flex-1 text-left text-sm leading-tight">
+                <span className="truncate font-semibold">
+                  {firstName} {lastName}
+                </span>
+                <span className="truncate text-xs">{email}</span>
               </div>
-              <div className="overflow-hidden text-xs text-muted-foreground">
-                <div className="line-clamp-1">{email}</div>
+              <ChevronsUpDown className="ml-auto size-4" />
+            </SidebarMenuButton>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent
+            className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg"
+            side={isMobile ? "bottom" : "right"}
+            align="end"
+            sideOffset={4}
+          >
+            <DropdownMenuLabel className="p-0 font-normal">
+              <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
+                <Avatar className="h-8 w-8 rounded-lg">
+                  <AvatarImage
+                    src="/next.svg"
+                    alt={`${firstName}'s profile pic`}
+                  />
+                  <AvatarFallback className="rounded-lg">CN</AvatarFallback>
+                </Avatar>
+                <div className="grid flex-1 text-left text-sm leading-tight">
+                  <span className="truncate font-semibold">
+                    {firstName} {lastName}
+                  </span>
+                  <span className="truncate text-xs">{email}</span>
+                </div>
               </div>
-            </div>
-          </div>
-        </DropdownMenuLabel>
-        <DropdownMenuSeparator />
-        <DropdownMenuGroup>
-          <DropdownMenuItem className="gap-2">
-            <Settings className="h-4 w-4 text-muted-foreground" />
-            Settings
-          </DropdownMenuItem>
-        </DropdownMenuGroup>
-        <DropdownMenuSeparator />
-        <DropdownMenuItem
-          className="gap-2"
-          onClick={() => {
-            deleteSelectedCompany();
-            logout().then(() => {
-              window.location.reload();
-            });
-          }}
-        >
-          <LogOut className="h-4 w-4 text-muted-foreground" />
-          Log out
-        </DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
+            </DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <DropdownMenuGroup>
+              <DropdownMenuItem className="gap-2">
+                <Settings className="h-4 w-4 text-muted-foreground" />
+                Settings
+              </DropdownMenuItem>
+            </DropdownMenuGroup>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem
+              className="gap-2"
+              onClick={() => {
+                deleteSelectedCompany();
+                logout().then(() => {
+                  window.location.reload();
+                });
+              }}
+            >
+              <LogOut className="h-4 w-4 text-muted-foreground" />
+              Log out
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </SidebarMenuItem>
+    </SidebarMenu>
   );
 }

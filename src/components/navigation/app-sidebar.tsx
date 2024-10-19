@@ -1,25 +1,31 @@
 "use client";
 
-// Import next components
-import Link from "next/link";
-import Image from "next/image";
+// import next component
+// import Image from "next/image";
 
-// Import component
+// import components
 import {
   Sidebar,
-  SidebarContent,
-  SidebarFooter,
+  useSidebar,
+  SidebarRail,
   SidebarHeader,
-  SidebarItem,
-  SidebarLabel,
+  SidebarFooter,
+  SidebarContent,
 } from "@/components/ui/sidebar";
-import { NavUser } from "@/components/navigation/nav-user";
 import { NavMain } from "@/components/navigation/nav-main";
+import { NavUser } from "@/components/navigation/nav-user";
 import { NavSecondary } from "@/components/navigation/nav-secondary";
+import { WorkspaceSwitcher } from "@/lib/features/workspace/components/workspace-switcher";
 
-// Import icons
-import { LifeBuoy, Send, Settings2, User, Users, KeyRound } from "lucide-react";
-import RukerSmallIcon from "@/assets/icons/ruker-small.png";
+// import from react query
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+
+// icons
+// import RukerIcon from "@/assets/icons/ruker-small.png";
+import { KeyRound, LifeBuoy, Send, Settings2, User, Users } from "lucide-react";
+
+const queryClient = new QueryClient();
 
 const navMain = [
   {
@@ -38,12 +44,6 @@ const navMain = [
         title: "Roles",
         url: "#",
         icon: KeyRound,
-        description: "",
-      },
-      {
-        title: "Settings",
-        url: "#",
-        icon: Settings2,
         description: "",
       },
     ],
@@ -82,37 +82,31 @@ const navSecondary = [
   },
 ];
 
-export function AppSidebar() {
+export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const { state } = useSidebar();
+
   return (
-    <Sidebar>
-      <SidebarHeader>
-        <Link
-          href="#"
-          className="flex ml-2 m-1 h-7 w-7 shrink-0 items-center justify-center gap-2 rounded-full bg-primary md:h-7 md:w-7 md:text-base"
-        >
-          <Image
-            src={RukerSmallIcon}
-            alt="Ruker"
-            className="transition-all group-hover:scale-110"
-            width={28}
-            height={28}
-          />
-          <span className="sr-only">Ruker</span>
-        </Link>
-      </SidebarHeader>
-      <SidebarContent>
-        <SidebarItem>
-          <SidebarLabel>Platform</SidebarLabel>
+    <QueryClientProvider client={queryClient}>
+      <Sidebar collapsible="icon" {...props}>
+        <SidebarHeader>
+          {/* {state === "expanded" ? ( */}
+          <WorkspaceSwitcher />
+          {/* ) : (
+            <div className="mt-1">
+              <Image src={RukerIcon} width={64} alt="" />
+            </div>
+          )} */}
+        </SidebarHeader>
+        <SidebarContent>
           <NavMain items={navMain} />
-        </SidebarItem>
-        <SidebarItem className="mt-auto">
-          <SidebarLabel>Help</SidebarLabel>
-          <NavSecondary items={navSecondary} />
-        </SidebarItem>
-      </SidebarContent>
-      <SidebarFooter>
-        <NavUser />
-      </SidebarFooter>
-    </Sidebar>
+          {state === "expanded" && <NavSecondary items={navSecondary} />}
+        </SidebarContent>
+        <SidebarFooter>
+          <NavUser />
+        </SidebarFooter>
+        <SidebarRail />
+      </Sidebar>
+      <ReactQueryDevtools />
+    </QueryClientProvider>
   );
 }

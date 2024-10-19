@@ -11,7 +11,14 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
+  DropdownMenuShortcut,
 } from "@/components/ui/dropdown-menu";
+import {
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  useSidebar,
+} from "@/components/ui/sidebar";
 
 // Import react query hook
 import { useQuery } from "@tanstack/react-query";
@@ -29,6 +36,7 @@ import { Atom, ChevronsUpDown, Plus } from "lucide-react";
 import { Company } from "@/lib/features/company/types/company";
 
 export function WorkspaceSwitcher() {
+  const { isMobile } = useSidebar();
   const [value, setValue] = useState("");
 
   const setCompany = useCompany((store) => store.setCompany);
@@ -72,55 +80,74 @@ export function WorkspaceSwitcher() {
   };
 
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger className="w-72 rounded-md border ring-ring hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 data-[state=open]:bg-accent">
-        <div className="flex items-center gap-1.5 overflow-hidden px-2 py-1.5 text-left text-sm transition-all">
-          {value ? (
-            <>
-              <div className="flex h-5 w-5 items-center justify-center rounded-sm bg-primary text-primary-foreground">
-                <Atom className="h-3.5 w-3.5 shrink-0" />
-              </div>
-              <div className="line-clamp-1 flex-1 pr-2 font-medium">
-                {value}
-              </div>
-            </>
-          ) : (
-            <div className="line-clamp-1 flex-1 pr-2 font-medium">
-              Select workspace
-            </div>
-          )}
-          <ChevronsUpDown className="ml-auto h-4 w-4 text-muted-foreground/50" />
-        </div>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-72">
-        <DropdownMenuLabel className="text-xs text-muted-foreground">
-          Companies
-        </DropdownMenuLabel>
-        {data?.map((company: Company) => (
-          <DropdownMenuItem
-            key={company.name}
-            onClick={() => handleSelect(company.name)}
-            className="items-start gap-2 px-1.5"
+    <SidebarMenu>
+      <SidebarMenuItem>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <SidebarMenuButton
+              size="lg"
+              className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
+            >
+              {value ? (
+                <>
+                  <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
+                    <Atom className="size-4" />
+                  </div>
+                  <div className="grid flex-1 text-left text-sm leading-tight">
+                    <span className="truncate font-semibold">{value}</span>
+                    <span className="truncate text-xs">Free</span>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
+                    <Atom className="size-4" />
+                  </div>
+                  <div className="grid flex-1 text-left text-sm leading-tight">
+                    <span className="truncate font-semibold">
+                      Select workspace
+                    </span>
+                  </div>
+                </>
+              )}
+
+              <ChevronsUpDown className="ml-auto" />
+            </SidebarMenuButton>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent
+            className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg"
+            align="start"
+            side={isMobile ? "bottom" : "right"}
+            sideOffset={4}
           >
-            <div className="flex h-8 w-8 items-center justify-center rounded-sm bg-primary text-primary-foreground">
-              <Atom className="h-5 w-5 shrink-0" />
-            </div>
-            <div className="grid flex-1 leading-tight">
-              <div className="line-clamp-1 font-medium">{company.name}</div>
-              <div className="overflow-hidden text-xs text-muted-foreground">
-                <div className="line-clamp-1">Free</div>
+            <DropdownMenuLabel className="text-xs text-muted-foreground">
+              Companies
+            </DropdownMenuLabel>
+            {data?.map((company: Company, index: number) => (
+              <DropdownMenuItem
+                key={company.name}
+                onClick={() => handleSelect(company.name)}
+                className="gap-2 p-2"
+              >
+                <div className="flex size-6 items-center justify-center rounded-sm border">
+                  <Atom className="size-4 shrink-0" />
+                </div>
+                {company.name}
+                <DropdownMenuShortcut>⌘{index + 1}</DropdownMenuShortcut>
+              </DropdownMenuItem>
+            ))}
+            <DropdownMenuSeparator />
+            <DropdownMenuItem className="gap-2 p-2">
+              <div className="flex size-6 items-center justify-center rounded-md border bg-background">
+                <Plus className="size-4" />
               </div>
-            </div>
-          </DropdownMenuItem>
-        ))}
-        <DropdownMenuSeparator />
-        <DropdownMenuItem className="gap-2 px-1.5">
-          <div className="flex h-8 w-8 items-center justify-center rounded-md border bg-background">
-            <Plus className="h-5 w-5" />
-          </div>
-          <div className="font-medium text-muted-foreground">Add workspace</div>
-        </DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
+              <div className="font-medium text-muted-foreground">
+                Add workspace
+              </div>
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </SidebarMenuItem>
+    </SidebarMenu>
   );
 }
