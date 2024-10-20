@@ -44,6 +44,30 @@ services:
       - my_network
     depends_on:
       - postgres
+  
+  mongodb:
+     image: mongo:latest
+     ports:
+      - "${MONGO_PORT}:27017"
+     environment:
+      - MONGO_INITDB_ROOT_USERNAME=${MONGO_USERNAME}
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_PASSWORD}
+     volumes:
+      - ./mongo:/data/db
+     networks:
+        - my_network
+
+  mongo-express:
+    image: mongo-express:latest
+    restart: always
+    ports:
+      - "${MONGO_EXPRESS_PORT}:8081"
+    environment:
+      - ME_CONFIG_MONGODB_ADMINUSERNAME=${MONGO_USERNAME}
+      - ME_CONFIG_MONGODB_ADMINPASSWORD=${MONGO_PASSWORD}
+      - ME_CONFIG_MONGODB_SERVER=mongodb
+    networks:
+      - my_network
 
   dashboard-service:
     image: advitama/ruker-dashboard-service:${DASHBOARD_VERSION}
@@ -82,7 +106,26 @@ services:
       - REDIS_PORT=${REDIS_PORT}
       - REDIS_PASSWORD=${REDIS_PASSWORD}
       - AUTH_APP_URL=http://localhost:3001
+      - EMAIL_API_URL=http://host.docker.internal:${EMAIL_PORT}/mail/send
+      - EMAIL_API_KEY=${API_KEY}
       - ALLOWED_ORIGINS=http://localhost:3000,http://localhost:3001,https://localhost:${DASHBOARD_PORT}
+    networks:
+      - my_network
+
+  email-service:
+    image: advitama/ruker-email-service:${EMAIL_VERSION}
+    restart: unless-stopped
+    ports:
+      - "${EMAIL_PORT}:3000"
+    environment:
+      - EMAIL_SERVICE=gmail
+      - EMAIL_HOST=smtp.gmail.com
+      - EMAIL_PORT=465
+      - EMAIL_SECURE=${EMAIL_SECURE}
+      - EMAIL_USER=${EMAIL_USER}
+      - EMAIL_PASS=${EMAIL_PASS}
+      - MONGO_URI=mongodb://${MONGO_USERNAME}:${MONGO_PASSWORD}@host.docker.internal:${MONGO_PORT}/
+      - API_KEY=${API_KEY}
     networks:
       - my_network
 
