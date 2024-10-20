@@ -1,12 +1,13 @@
 "use client";
 
+import { env } from "@/config/env";
 import axios, { InternalAxiosRequestConfig } from "axios";
 import { getAccessToken } from "@/utils/function/access-token";
 
 import { toast } from "@/components/ui/use-toast";
 
 const DASHBOARD_API = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_DASHBOARD_API_URL,
+  baseURL: env.NEXT_PUBLIC_DASHBOARD_API_URL,
   headers: {
     "Content-Type": "application/json",
   },
