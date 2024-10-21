@@ -1,7 +1,8 @@
-"use client";
+"use client"; // Mark this as a client-side component
 
 // import next component
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 // import components
 import {
@@ -37,13 +38,24 @@ export function NavMain({
     }[];
   }[];
 }) {
+  const pathname = usePathname();
+
+  items.map((item) => {
+    item.isActive = pathname.includes(item.url);
+  });
+
   return (
     <SidebarGroup>
       <SidebarGroupLabel>Platform</SidebarGroupLabel>
       <SidebarMenu>
         <SidebarMenuItem>
           <Link href="/">
-            <SidebarMenuButton tooltip="Home">
+            <SidebarMenuButton
+              className={`${
+                pathname === "/" && "bg-accent text-accent-foreground"
+              }`}
+              tooltip="Home"
+            >
               <Home />
               <span>Home</span>
             </SidebarMenuButton>
@@ -58,7 +70,12 @@ export function NavMain({
           >
             <SidebarMenuItem>
               <CollapsibleTrigger asChild>
-                <SidebarMenuButton tooltip={item.title}>
+                <SidebarMenuButton
+                  className={`${
+                    item.isActive && "bg-accent text-accent-foreground"
+                  }`}
+                  tooltip={item.title}
+                >
                   {item.icon && <item.icon />}
                   <span>{item.title}</span>
                   <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />

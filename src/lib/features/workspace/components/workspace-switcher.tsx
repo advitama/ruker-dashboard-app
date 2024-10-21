@@ -11,7 +11,6 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-  DropdownMenuShortcut,
 } from "@/components/ui/dropdown-menu";
 import {
   SidebarMenu,
@@ -30,21 +29,21 @@ import { useCompany } from "@/lib/features/company/hooks/use-company";
 import DASHBOARD_API from "@/lib/api/dashboard";
 
 // Import icons
-import { Atom, ChevronsUpDown, Plus } from "lucide-react";
+import { Atom, ChevronsUpDown, Plus, Check } from "lucide-react";
 
 // Import type
 import { Company } from "@/lib/features/company/types/company";
 
 export function WorkspaceSwitcher() {
   const { isMobile } = useSidebar();
-  const [value, setValue] = useState("");
+  const [value, setValue] = useState<number | null>();
 
   const setCompany = useCompany((store) => store.setCompany);
   const deleteSelectedCompany = useCompany(
     (store) => store.deleteSelectedCompany
   );
 
-  const { name } = useCompany((state) => state);
+  const { id } = useCompany((state) => state);
 
   const { data, isFetched } = useQuery({
     queryKey: ["companies"],
@@ -56,26 +55,24 @@ export function WorkspaceSwitcher() {
 
   useEffect(() => {
     if (isFetched && data) {
-      const companyExists = data.some(
-        (company: Company) => company.name === name
-      );
+      const companyExists = data.some((company: Company) => company.id === id);
 
       if (!companyExists) {
         deleteSelectedCompany();
-      } else if (name) {
-        setValue(name);
+      } else if (id) {
+        setValue(id);
       }
     }
-  }, [name, data, isFetched, deleteSelectedCompany]);
+  }, [id, data, isFetched, deleteSelectedCompany]);
 
-  const handleSelect = (currentValue: string) => {
+  const handleSelect = (currentValue: number) => {
     const selectedCompany = data?.find(
-      (company: Company) => company.name === currentValue
+      (company: Company) => company.id === currentValue
     );
 
     if (selectedCompany) {
       setCompany(selectedCompany);
-      setValue(currentValue === value ? "" : currentValue);
+      setValue(currentValue === value ? null : currentValue);
     }
   };
 
@@ -94,7 +91,12 @@ export function WorkspaceSwitcher() {
                     <Atom className="size-4" />
                   </div>
                   <div className="grid flex-1 text-left text-sm leading-tight">
-                    <span className="truncate font-semibold">{value}</span>
+                    <span className="truncate font-semibold">
+                      {
+                        data?.find((company: Company) => company.id === value)
+                          .name
+                      }
+                    </span>
                     <span className="truncate text-xs">Free</span>
                   </div>
                 </>
@@ -123,17 +125,17 @@ export function WorkspaceSwitcher() {
             <DropdownMenuLabel className="text-xs text-muted-foreground">
               Companies
             </DropdownMenuLabel>
-            {data?.map((company: Company, index: number) => (
+            {data?.map((company: Company) => (
               <DropdownMenuItem
                 key={company.name}
-                onClick={() => handleSelect(company.name)}
+                onClick={() => handleSelect(company.id)}
                 className="gap-2 p-2"
               >
                 <div className="flex size-6 items-center justify-center rounded-sm border">
                   <Atom className="size-4 shrink-0" />
                 </div>
                 {company.name}
-                <DropdownMenuShortcut>⌘{index + 1}</DropdownMenuShortcut>
+                {id === company.id && <Check className="w-4 h-4" />}
               </DropdownMenuItem>
             ))}
             <DropdownMenuSeparator />

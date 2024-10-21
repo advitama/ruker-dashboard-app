@@ -30,19 +30,18 @@ const queryClient = new QueryClient();
 const navMain = [
   {
     title: "IAM",
-    url: "#",
+    url: "/iam",
     icon: Users,
-    isActive: false,
     items: [
       {
         title: "Manage user",
-        url: "#",
+        url: "/iam/users",
         icon: User,
         description: "",
       },
       {
         title: "Roles",
-        url: "#",
+        url: "/iam/roles",
         icon: KeyRound,
         description: "",
       },
@@ -50,20 +49,16 @@ const navMain = [
   },
   {
     title: "Settings",
-    url: "#",
+    url: "/settings",
     icon: Settings2,
     items: [
       {
         title: "General",
-        url: "#",
-      },
-      {
-        title: "Team",
-        url: "#",
+        url: "/settings/general",
       },
       {
         title: "Billing",
-        url: "#",
+        url: "/settings/billing",
       },
     ],
   },
